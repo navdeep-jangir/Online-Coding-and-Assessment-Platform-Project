@@ -4,6 +4,16 @@
 **Workspace:** `d:\CodeClimber`
 **Last Updated:** 2026-11-26
 
+## Phase 10C — GitHub Upload, Production Deployment & Live Verification (Completed & Verified)
+- **GitHub Upload (`https://github.com/navdeep-jangir/Online-Coding-and-Assessment-Platform-Project`):**
+  - Audited all files, excluded `.env`, `node_modules/`, build caches, and `server/src/seeds/problems/` (hidden test cases) via `.gitignore`, sanitized `.env.example` & `README.md`, and pushed `main` (`e52be85`, `e21d7d0`).
+- **Production Deployment:**
+  - **Backend (Render Free):** `https://codeclimb-api-xv6m.onrender.com` (`Root Directory: server`, `npm ci` -> `npm start`, `Health Check: /api/v1/health` returning `HTTP 200` with `database: "connected"`).
+  - **Frontend (Vercel Hobby):** `https://codeclimb-beta.vercel.app` (`Root Directory: client`, `npm ci` -> `npm run build`, `client/vercel.json` same-origin `/api/(.*)` proxy + SPA rewrites).
+  - **Database & Account Hardening:** MongoDB Atlas `codeclimb` preserved (`24` modules, `348` concepts, `150` problems, `712` test cases); Render outbound IPs whitelisted; local `JWT_SECRET` rotated; `admin@codeclimb.dev` password rotated via `npm run provision:admin`; all dev/test accounts deactivated (`isActive: false`), preserving `navdeepjangir2006@gmail.com`.
+- **Live Verification:**
+  - Verified live Vercel proxy, CORS, `HttpOnly; Secure; SameSite=Lax` cookies, role escalation block, RBAC (`403` student / `200` admin), live Judge0 `Accepted` in `C`, `C++`, `Java`, and `Python`, SPA refresh, mobile responsiveness (`390x844`), and `0` console/network errors (`DEPLOYMENT_STATUS.md`).
+
 ## Phase 10B — Complete Coding Problem & Test Case Validation (Completed & Verified)
 - **Live Judge0 Reference Validation (`150 / 150` Active Problems, `712` Test Cases):**
   - Executed sequential batches (`Batch 2: 26–50`, `Batch 3: 51–75`, `Batch 4: 76–100`, `Batch 5: 101–125`, `Batch 6: 126–150`) against `https://ce.judge0.com` using a resumable validation runner, saving validated Python reference solutions and `validationStatus` into MongoDB (`0` missing reference solutions, `0` unmapped problems).

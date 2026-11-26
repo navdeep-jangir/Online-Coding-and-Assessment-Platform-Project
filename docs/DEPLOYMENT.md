@@ -1,22 +1,47 @@
 # CodeClimb Deployment Guide
 
-## 1. MongoDB Setup
-- **Local:** Install MongoDB Community Server and start `mongod` on port `27017` (`MONGODB_URI=mongodb://localhost:27017/codeclimb`).
-- **Cloud (MongoDB Atlas):** Create a free M0 cluster, whitelist your server IP, and set `MONGODB_URI` to your SRV connection string.
+## 1. Production Architecture
+- **GitHub Repository:** https://github.com/navdeep-jangir/Online-Coding-and-Assessment-Platform-Project (`main` branch)
+- **Frontend Hosting (Vercel):** https://codeclimb-beta.vercel.app
+  - Root Directory: `client`
+  - Framework Preset: `Vite`
+  - Install Command: `npm ci`
+  - Build Command: `npm run build`
+  - Output Directory: `dist`
+  - Proxy & SPA Rewrites (`client/vercel.json`): proxies `/api/(.*)` -> `https://codeclimb-api-xv6m.onrender.com/api/$1` (same-origin cookie authentication) and rewrites `/(.*)` -> `/index.html`.
+- **Backend Hosting (Render):** https://codeclimb-api-xv6m.onrender.com
+  - Root Directory: `server`
+  - Runtime: `Node`
+  - Build Command: `npm ci`
+  - Start Command: `npm start`
+  - Health Check Path: `/api/v1/health`
+  - Auto-Deploy: `On Commit` (`main`)
 
-## 2. Judge0 Code Execution Setup
-CodeClimb integrates with **Judge0 CE** (`server/src/services/judge0Service.js`) and dynamically discovers supported language IDs from `/languages`.
-- **Option A — Self-Hosted Docker (Recommended for production/college lab):**
-  Run Judge0 CE with `docker-compose` and set `JUDGE0_API_URL=http://localhost:2358`.
-- **Option B — RapidAPI Hosted Judge0:**
-  Set `JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com`, `JUDGE0_API_KEY=<your-key>`, and `JUDGE0_API_HOST=judge0-ce.p.rapidapi.com`.
-- **Fallback Behavior:** If Judge0 is not running or `JUDGE0_API_URL` is unset, CodeClimb returns HTTP `503` with an explicit `"Code execution service is currently unavailable"` message and never simulates fake execution.
+## 2. Required Backend Environment Variables (Render Dashboard)
+Configure these in **Render -> Environment** (never commit secrets to GitHub):
+- `NODE_ENV=production`
+- `MONGODB_URI` (MongoDB Atlas SRV URI targeting database `codeclimb` with least-privilege user)
+- `JWT_SECRET` (cryptographically random 96-char hex secret)
+- `JWT_EXPIRE=7d`
+- `CLIENT_URL=https://codeclimb-beta.vercel.app`
+- `JUDGE0_API_URL=https://ce.judge0.com` (or RapidAPI / self-hosted Judge0 endpoint)
+- `JUDGE0_API_KEY` / `JUDGE0_API_HOST` *(if using RapidAPI Judge0)*
+- `TZ=Asia/Kolkata`
 
-## 3. Production Build & Hosting
-1. Build frontend assets:
-   ```bash
-   cd client && npm run build
-   ```
-2. Set `NODE_ENV=production`, a strong `JWT_SECRET`, `CLIENT_URL` (your HTTPS frontend origin), and `TZ=Asia/Kolkata`.
-3. Run the Express server with PM2 or Docker (`npm start` inside `server/`).
-4. Put Nginx or a cloud load balancer in front with HTTPS enabled so `secure: true` HTTP-only cookies work properly.
+## 3. MongoDB Atlas Setup
+- Database name: `codeclimb` (contains 24 DSA modules, 348 curated notes, 150 active coding problems, 712 test cases, 150 validated Python reference solutions, achievements, and student/admin records).
+- Add Render's outbound IP ranges (from Render **Connect -> Outbound**) to **MongoDB Atlas -> Network Access**.
+- Never run destructive seed scripts (`seed:problems`, `seed:demo`) against production.
+- To safely provision or rotate the administrator password locally:
+  1. Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `server/.env`.
+  2. Run `cd server && npm run provision:admin`.
+
+## 4. Judge0 Code Execution Setup
+- **Current Demo Endpoint:** `https://ce.judge0.com` (public Judge0 CE v1.14.0 sandbox, dynamically resolves C, C++, Java, and Python).
+- **Recommended Production Upgrade:** Self-hosted Docker Judge0 (`http://...`) or RapidAPI Judge0 (`https://judge0-ce.p.rapidapi.com` + `JUDGE0_API_KEY` + `JUDGE0_API_HOST`) for higher rate limits.
+- **Fallback Behavior:** If Judge0 is unavailable, CodeClimb returns HTTP `503` without simulating fake execution.
+
+## 5. Safe Continuous Deployment Updates
+1. Make changes locally and run `cd server && npm test` and `cd client && npm run lint && npm test && npm run build`.
+2. Commit and push to `main` on `navdeep-jangir/Online-Coding-and-Assessment-Platform-Project` (never commit `.env` or `server/src/seeds/problems/`).
+3. Both Vercel (`client/`) and Render (`server/`) automatically redeploy from `main` without resetting MongoDB Atlas.

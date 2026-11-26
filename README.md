@@ -7,7 +7,9 @@
 CodeClimb is a full-stack online coding education, structured DSA learning, and automated code assessment platform built with React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB Atlas, Monaco Editor, and Judge0 CE.
 
 - **GitHub Repository:** https://github.com/navdeep-jangir/Online-Coding-and-Assessment-Platform-Project
-- **Live Website URL:** *Pending deployment (Task 8 / Task 14)*
+- **Live Website URL (Vercel):** https://codeclimb-beta.vercel.app
+- **Live Backend API URL (Render):** https://codeclimb-api-xv6m.onrender.com
+- **Backend Health Endpoint:** https://codeclimb-api-xv6m.onrender.com/api/v1/health
 
 ---
 

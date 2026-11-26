@@ -1,8 +1,9 @@
-# CodeClimb — Final Functional & Security Audit Report (Phases 10A + 10B)
+# CodeClimb — Final Functional & Security Audit Report (Phases 10A–10C)
 
-**Date:** 2026-11-26
+**Date:** 2026-11-27
 **Workspace:** `d:\CodeClimber`
-**Environment:** Development (`http://localhost:5173` + `http://localhost:5000` + MongoDB Atlas `codeclimb` + Judge0 CE `https://ce.judge0.com`)
+**Production URLs:** Frontend `https://codeclimb-beta.vercel.app` | Backend `https://codeclimb-api-xv6m.onrender.com` | Health `https://codeclimb-api-xv6m.onrender.com/api/v1/health`
+**GitHub Repository:** https://github.com/navdeep-jangir/Online-Coding-and-Assessment-Platform-Project (`main`)
 
 ---
 
@@ -55,4 +56,4 @@
 ---
 
 ## 6. Deployment Readiness Status
-- **Status:** **Ready for Staging & Deployment Preparation** (all core features, RBAC, Judge0 execution, 150/150 Python reference solutions, Playwright E2E, and builds pass).
+- **Status:** **Deployed & Live-Verified (Phase 10C Complete)** — see [DEPLOYMENT_STATUS.md](file:///d:/CodeClimber/DEPLOYMENT_STATUS.md) for live URLs, feature-wise PASS/FAIL results, and hosting limitations.
