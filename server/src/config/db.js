@@ -1,5 +1,20 @@
 import mongoose from 'mongoose';
 
+let reconnectTimer = null;
+
+const scheduleReconnect = (uri) => {
+  if (process.env.NODE_ENV === 'test' || reconnectTimer) return;
+  reconnectTimer = setTimeout(async () => {
+    reconnectTimer = null;
+    if (mongoose.connection.readyState === 0) {
+      await connectDB(uri);
+    }
+  }, 10000);
+  if (typeof reconnectTimer.unref === 'function') {
+    reconnectTimer.unref();
+  }
+};
+
 /**
  * Connect to MongoDB using Mongoose.
  * @param {string} [uri] - Optional MongoDB connection URI override.
@@ -13,7 +28,7 @@ export const connectDB = async (uri = process.env.MONGODB_URI) => {
 
   try {
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
     });
     if (process.env.NODE_ENV !== 'test') {
       console.log(`MongoDB Connected: ${conn.connection.host}`);
@@ -24,6 +39,7 @@ export const connectDB = async (uri = process.env.MONGODB_URI) => {
     if (process.env.NODE_ENV === 'test') {
       throw error;
     }
+    scheduleReconnect(uri);
     return null;
   }
 };
