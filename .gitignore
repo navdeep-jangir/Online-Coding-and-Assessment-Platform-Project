@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs & TypeScript caches
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Test artifacts & Playwright state
+coverage/
+.vitest/
+test-results/
+playwright-report/
+playwright/.auth/
+
+# Private database dumps & protected hidden test-case seeds
+*.dump
+*.bak
+server/src/seeds/problems/

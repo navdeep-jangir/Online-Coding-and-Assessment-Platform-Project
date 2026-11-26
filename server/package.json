@@ -1,0 +1,39 @@
+{
+  "name": "codeclimb-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed": "node src/seeds/index.js",
+    "seed:curriculum": "node src/seeds/seedCurriculum.js",
+    "seed:problems": "node src/seeds/seedProblems.js",
+    "seed:demo": "node src/seeds/seedDemo.js",
+    "provision:admin": "node src/seeds/provisionAdmin.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "mongoose": "^8.8.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
+    "morgan": "^1.10.0",
+    "axios": "^1.7.0",
+    "node-cron": "^3.0.3",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "vitest": "^2.1.0",
+    "supertest": "^7.0.0"
+  }
+}
